@@ -14,29 +14,28 @@ export class Root extends Component<{}, State> {
     opened: false
   };
 
-  public toggle(opened: boolean) {
-    (this.state as any).opened = opened;
-  }
-
-  public invite(name: string) {
-    this.setState(({ invites }) => {
-      invites.push(name);
-
-      return { invites };
-    });
-  }
-
   public render() {
     return (
-      <>
-        <button onClick={() => this.toggle(true)}>Open invites list</button>
-        <Modal opened={this.state.opened} onClose={() => this.toggle(false)}>
-          <Invites
-            invites={this.state.invites}
-            onAdd={this.invite.bind(this)}
-          />
-        </Modal>
-      </>
+        <>
+          <button onClick={this.toggle}>Open invites list</button>
+          <Modal opened={this.state.opened} onClose={this.toggle}>
+            <Invites
+                invites={this.state.invites}
+                onAdd={this.invite}
+            />
+          </Modal>
+        </>
     );
   }
+
+  private readonly toggle = (): void => {
+    this.setState(state => ({ opened: !state.opened }));
+  };
+
+  private readonly invite = (name: string): void => {
+    this.setState(({ invites }) => {
+
+      return { invites: [...invites, name] };
+    });
+  };
 }

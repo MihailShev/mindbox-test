@@ -1,50 +1,46 @@
 import React, { Component, ReactNode } from "react";
 import { CSSTransition } from "react-transition-group";
-
 import { Close } from "../Close";
-
 import "./style.css";
 
-interface State {
-  opened: boolean;
-}
+const DEFAULT_TRANSITION_TIMEOUT = 300;
 
 interface Props {
-  opened: boolean;
-  onClose: () => void;
+    opened: boolean;
+    onClose: () => void;
+    transitionTimeout?: number;
 }
 
-export class Modal extends Component<Props, State> {
-  public readonly state: State = {
-    opened: false
-  };
+export class Modal extends Component<Props> {
 
-  public static getDerivedStateFromProps(props: Props, state: State): State {
-    return { opened: props.opened };
-  }
+    public render(): ReactNode {
+        const {
+            opened,
+            onClose,
+            transitionTimeout = DEFAULT_TRANSITION_TIMEOUT,
+            children
+        } = this.props;
 
-  public render(): ReactNode {
-    return (
-      <CSSTransition
-        classNames={{
-          enter: "modal_enter",
-          enterActive: "modal_enter-active",
-          enterDone: "modal_enter-done",
-          exit: "modal_exit",
-          exitActive: "modal_exit-active",
-          exitDone: "modal_exit-done"
-        }}
-        in={this.state.opened}
-        timeout={300}
-      >
-        <div className="modal">
-          <div className="modal--content">
-            <Close onClick={this.props.onClose} />
-
-            {this.props.children}
-          </div>
-        </div>
-      </CSSTransition>
-    );
-  }
+        return (
+            <CSSTransition
+                classNames={{
+                    enter: "modal_enter",
+                    enterActive: "modal_enter-active",
+                    enterDone: "modal_enter-done",
+                    exit: "modal_exit",
+                    exitActive: "modal_exit-active",
+                    exitDone: "modal_exit-done"
+                }}
+                in={opened}
+                timeout={transitionTimeout}
+            >
+                <div className="modal">
+                    <div className="modal--content">
+                        <Close onClick={onClose}/>
+                        {children}
+                    </div>
+                </div>
+            </CSSTransition>
+        );
+    }
 }

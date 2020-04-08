@@ -1,47 +1,50 @@
-import React, { FC, useState, useCallback, useEffect } from "react";
+import React, { ChangeEvent, FC, useCallback, useEffect, useState } from 'react';
+import './style.css';
 
-import "./style.css";
+const EMPTY = '';
 
 interface Props {
-  invites: string[];
-  onAdd: (name: string) => void;
+    invites: string[];
+    onAdd: (name: string) => void;
 }
 
 export const Invites: FC<Props> = ({ invites, onAdd }) => {
-  const [name, setName] = useState("");
-  const handleChangeName = useCallback(
-    (event: any) => {
-      setName(event.target.value);
-    },
-    [setName]
-  );
-  const handleSubmit = useCallback(() => {
-    onAdd(name);
-  }, [name, onAdd]);
+    const [name, setName] = useState(EMPTY);
 
-  useEffect(() => {
-    setName("");
-  }, [invites]);
+    const handleChangeName = useCallback(
+        (event: ChangeEvent<HTMLInputElement>) => {
+            setName(event.target.value);
+        },
+        []
+    );
 
-  return (
-    <div className="invites">
-      <div className="invites--form">
-        <input
-          className="invites--form-input"
-          onChange={handleChangeName}
-          type="text"
-          value={name}
-        />
-        <button className="invites--form-submit" onClick={handleSubmit}>
-          Invite
-        </button>
-      </div>
-      <div className="invites--delimiter" />
-      <ul className="invites--items">
-        {invites.map(name => (
-          <li className="invites--item">{name}</li>
-        ))}
-      </ul>
-    </div>
-  );
+    const handleSubmit = useCallback(() => {
+        onAdd(name);
+    }, [name, onAdd]);
+
+    useEffect(() => {
+        setName(EMPTY);
+    }, [invites]);
+
+    return (
+        <div className="invites">
+            <div className="invites--form">
+                <input
+                    className="invites--form-input"
+                    onChange={handleChangeName}
+                    type="text"
+                    value={name}
+                />
+                <button className="invites--form-submit" onClick={handleSubmit}>
+                    Invite
+                </button>
+            </div>
+            <div className="invites--delimiter"/>
+            <ul className="invites--items">
+                {invites.map((name, i) => (
+                    <li className="invites--item" key={`${i}${name}`}>{name}</li>
+                ))}
+            </ul>
+        </div>
+    );
 };
